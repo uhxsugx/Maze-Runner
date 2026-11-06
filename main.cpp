@@ -1,8 +1,8 @@
-
 #include<iostream>
 #include "player.h"
 #include "player2.h"
 #include "sounds.h"
+#include "resume.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -19,6 +19,8 @@ int main()
 
     initializePlayer();
     initializePlayer2();
+
+    initializePauseMenu();
 
     Music music;
     backgroundMusic(music, 1);
@@ -38,19 +40,42 @@ int main()
                 {
                     Gamewin.close();
                 }
+
+                int action = handlePauseInput(keyPressed->code);
+
+                if (action == restart)
+                {
+                    initializePlayer();
+                    initializePlayer2();
+                    paused = false;
+                }
+
+                else if (action == main_menu)
+                {
+                    cout << "Main Menu selected!" << endl;
+                }
+
+                else if (action == exit_game)
+                {
+                    Gamewin.close();
+                }
             }
         }
 
         Gamewin.clear();
-
-        movePlayer(width, length);
-        movePlayer2(width, length);
-
+        if (!paused)
+        {
+            movePlayer(width, length);
+            movePlayer2(width, length);
+        }
         DrawHealthBar(Gamewin);
         DrawHealthBarPlayer2(Gamewin);
-
         drawPlayer(Gamewin);
         drawPlayer2(Gamewin);
+        if (paused)
+        {
+            drawPauseMenu(Gamewin);
+        }
 
         Gamewin.display();
     }
