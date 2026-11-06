@@ -21,13 +21,6 @@ int main()
 			{
 				Gamewin.close();
 			}
-			if (const auto* keyPressed = event->getIf<Event::KeyPressed>())
-			{
-				if (keyPressed->code == Keyboard::Key::H)
-				{
-					takeDamage(10);
-				}
-			}
 			Gamewin.clear();
 			DrawHealthBar(Gamewin);
 			movePlayer(width,length);
