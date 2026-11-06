@@ -88,3 +88,14 @@ void DrawHealthBar(RenderWindow & w)
 
 	w.draw(currenthealth);
 }
+bool GameOver()
+{
+	if (playerHealth <= 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}

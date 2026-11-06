@@ -9,6 +9,7 @@ int main()
 	int width = Gamewin.getSize().x;
 	int length = Gamewin.getSize().y;
 	initializePlayer();
+	bool gamefinish = false;
 	while (Gamewin.isOpen())
 	{
 		while (optional<Event> event = Gamewin.pollEvent())
@@ -21,13 +22,31 @@ int main()
 			{
 				Gamewin.close();
 			}
-			Gamewin.clear();
-			DrawHealthBar(Gamewin);
-			movePlayer(width,length);
-			drawPlayer(Gamewin);
-			Gamewin.display();
-		
 		}
+		if (GameOver())
+		{
+			gamefinish = true;
+		}
+
+		if (!gamefinish)
+		{
+			movePlayer(width, length);
+		}
+		Gamewin.clear();
+		DrawHealthBar(Gamewin);
+		drawPlayer(Gamewin);
+		if (gamefinish)
+		{
+
+		}
+		Gamewin.display();
+	
+	
+	
+	
+	
 	}
+
+	return 0;
 
 }
