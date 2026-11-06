@@ -10,7 +10,7 @@ void initializePlayer()
 	playerY = 100;
 	playerHealth = 100;
 	playerSpeed = 5;
-	playerTexture.loadFromFile("assests_resources/player.png");
+	playerTexture.loadFromFile("data/sprites/player.png");
 	
 	
 }
