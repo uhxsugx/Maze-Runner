@@ -12,9 +12,7 @@ void initializePlayer2()
     player2Health = 100;
     player2Speed = 5;
 
-    player2Texture.loadFromFile(
-        "C:/Users/Admin/source/repos/ssfml/ssfml/assests_resources/player.png"
-    );
+    player2Texture.loadFromFile("data/sprites/player.png");
 }
 
 void drawPlayer2(RenderWindow& window)
