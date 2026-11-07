@@ -3,7 +3,7 @@
 using namespace std;
 using namespace sf;
 int player2X, player2Y, player2Health, player2Speed;
-Texture player2Texture;
+//Texture player2Texture;
 
 void initializePlayer2()
 {
@@ -12,20 +12,21 @@ void initializePlayer2()
     player2Health = 100;
     player2Speed = 5;
 
-    player2Texture.loadFromFile("data/sprites/player.png");
+    //player2Texture.loadFromFile("data/sprites/player.png");
 }
 
 void drawPlayer2(RenderWindow& window)
 {
-    float width = static_cast<float>(player2Texture.getSize().x);
-    float length = static_cast<float>(player2Texture.getSize().y);
-
-    Sprite player2Sprite(player2Texture);
-
-    player2Sprite.setScale(Vector2f(80.f / width, 85.f / length));
-    player2Sprite.setPosition(Vector2f(player2X, player2Y));
-
-    window.draw(player2Sprite);
+    RectangleShape playerTexture({20.f, 20.f});
+	float width =static_cast<float> (playerTexture.getSize().x);
+	float length =static_cast<float> (playerTexture.getSize().y);
+	//Sprite playerSprite(playerTexture);
+	//playerSprite.setScale(Vector2f(80.f /width,85.f/length));
+	playerTexture.setFillColor(Color::Blue);
+	playerTexture.setOutlineColor(Color::White);
+	playerTexture.setOutlineThickness(1.f);
+	playerTexture.setPosition(Vector2f(player2X, player2Y));
+	window.draw(playerTexture);
 }
 
 using namespace Keyboard;
@@ -34,7 +35,7 @@ void movePlayer2(int windowWidth, int windowHeight)
 {
     if (isKeyPressed(Key::Right))
     {
-        if (player2X + 80 + player2Speed <= windowWidth)
+        if (player2X + player2Speed <= windowWidth)
         {
             player2X += player2Speed;
         }
@@ -55,18 +56,18 @@ void movePlayer2(int windowWidth, int windowHeight)
     }
     else if (isKeyPressed(Key::Down))
     {
-        if (player2Y + player2Speed + 85 <= windowHeight)
+        if (player2Y + player2Speed <= windowHeight)
         {
             player2Y += player2Speed;
         }
     }
 }
 
-void takeDamagePlayer2(int damage)
+int takeDamagePlayer2(int damage)
 {
     if (player2Health <= 0 || damage <= 0)
     {
-        return;
+        return player2Health;
     }
 
     player2Health -= damage;
@@ -75,6 +76,12 @@ void takeDamagePlayer2(int damage)
     {
         player2Health = 0;
     }
+
+    if(player2Health > 100)
+    {
+        player2Health = 100;
+    }
+    return player2Health;
 }
 
 void DrawHealthBarPlayer2(RenderWindow& window)
@@ -97,3 +104,4 @@ void DrawHealthBarPlayer2(RenderWindow& window)
 
     window.draw(currentHealth);
 }
+

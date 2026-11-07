@@ -1,34 +1,37 @@
 #include<SFML/Graphics.hpp>
+#include <iostream>
 using namespace std;
 using namespace sf;
 int playerX, playerY, playerHealth, playerSpeed;
-Texture playerTexture;
 
 void initializePlayer()
 {
 	playerX = 100;
 	playerY = 100;
 	playerHealth = 100;
-	playerSpeed = 5;
-	playerTexture.loadFromFile("data/sprites/player.png");
-	
+	playerSpeed = 1;
+	//playerTexture.loadFromFile("data/sprites/player.png");
 	
 }
 void drawPlayer(RenderWindow & window)
 {
+	RectangleShape playerTexture({20.f, 20.f});
 	float width =static_cast<float> (playerTexture.getSize().x);
 	float length =static_cast<float> (playerTexture.getSize().y);
-	Sprite playerSprite(playerTexture);
-	playerSprite.setScale(Vector2f(80.f /width,85.f/length));
-	playerSprite.setPosition(Vector2f(playerX, playerY));
-	window.draw(playerSprite);
+	//Sprite playerSprite(playerTexture);
+	//playerSprite.setScale(Vector2f(80.f /width,85.f/length));
+	playerTexture.setFillColor(Color::Green);
+	playerTexture.setOutlineColor(Color::White);
+	playerTexture.setOutlineThickness(1.f);
+	playerTexture.setPosition(Vector2f(playerX, playerY));
+	window.draw(playerTexture);
 }
 using namespace Keyboard;
 void movePlayer(int windowWidth,int windowHeight)
 {
 	if (isKeyPressed(Key::D))
 	{
-		if (playerX+80+playerSpeed <=windowWidth)
+		if (playerX + playerSpeed <=windowWidth)
 		{
 			playerX += playerSpeed;
 		}
@@ -49,19 +52,19 @@ void movePlayer(int windowWidth,int windowHeight)
 	}
 	else if (isKeyPressed(Key::S))
 	{
-		if (playerY + playerSpeed + 85 <= windowHeight)
+		if (playerY + playerSpeed <= windowHeight)
 		{
 			playerY += playerSpeed;
 		}
 	}
-
 	
 }
-void takeDamage(int damage)
+
+int takeDamage(int damage)
 {
 	if (playerHealth <= 0 || damage <= 0)
 	{
-		return;
+		return playerHealth;
 	}
 	playerHealth -= damage;
 
@@ -69,6 +72,13 @@ void takeDamage(int damage)
 	{
 		playerHealth = 0;
 	}
+
+	if(playerHealth > 100)
+	{
+		playerHealth = 100;
+	}
+
+	return playerHealth;
 }
 void DrawHealthBar(RenderWindow & w)
 {
@@ -87,15 +97,4 @@ void DrawHealthBar(RenderWindow & w)
 	currenthealth.setFillColor(Color::Green);
 
 	w.draw(currenthealth);
-}
-bool GameOver()
-{
-	if (playerHealth <= 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
