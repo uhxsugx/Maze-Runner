@@ -3,25 +3,22 @@
 using namespace std;
 using namespace sf;
 int player2X, player2Y, player2Health, player2Speed;
-//Texture player2Texture;
+float player2_size = 20.0;
 
 void initializePlayer2()
 {
     player2X = 250;
     player2Y = 100;
     player2Health = 100;
-    player2Speed = 5;
+    player2Speed = 1;
 
-    //player2Texture.loadFromFile("data/sprites/player.png");
 }
 
 void drawPlayer2(RenderWindow& window)
 {
-    RectangleShape playerTexture({20.f, 20.f});
+    RectangleShape playerTexture({player2_size, player2_size});
 	float width =static_cast<float> (playerTexture.getSize().x);
 	float length =static_cast<float> (playerTexture.getSize().y);
-	//Sprite playerSprite(playerTexture);
-	//playerSprite.setScale(Vector2f(80.f /width,85.f/length));
 	playerTexture.setFillColor(Color::Blue);
 	playerTexture.setOutlineColor(Color::White);
 	playerTexture.setOutlineThickness(1.f);
@@ -31,11 +28,11 @@ void drawPlayer2(RenderWindow& window)
 
 using namespace Keyboard;
 
-void movePlayer2(int windowWidth, int windowHeight)
+void movePlayer2(int windowWidth, int windowHeight, int &playerX2, int &playerY2)
 {
     if (isKeyPressed(Key::Right))
     {
-        if (player2X + player2Speed <= windowWidth)
+        if (player2X + player2Speed <= (windowWidth-player2_size))
         {
             player2X += player2Speed;
         }
@@ -56,11 +53,13 @@ void movePlayer2(int windowWidth, int windowHeight)
     }
     else if (isKeyPressed(Key::Down))
     {
-        if (player2Y + player2Speed <= windowHeight)
+        if (player2Y + player2Speed <= (windowHeight-player2_size))
         {
             player2Y += player2Speed;
         }
     }
+    playerX2 = player2X;
+    playerY2 = player2Y;
 }
 
 int takeDamagePlayer2(int damage)
@@ -100,7 +99,7 @@ void DrawHealthBarPlayer2(RenderWindow& window)
 
     currentHealth.setSize(Vector2f(healthWidth, 20.f));
     currentHealth.setPosition(Vector2f(250.f, 20.f));
-    currentHealth.setFillColor(Color::Green);
+    currentHealth.setFillColor(Color::Blue);
 
     window.draw(currentHealth);
 }

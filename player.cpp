@@ -2,24 +2,22 @@
 #include <iostream>
 using namespace std;
 using namespace sf;
-int playerX, playerY, playerHealth, playerSpeed;
+int playerX, playerY, playerHealth;
+float playerSpeed;
+float player_size = 20.0;
 
 void initializePlayer()
 {
 	playerX = 100;
 	playerY = 100;
 	playerHealth = 100;
-	playerSpeed = 1;
-	//playerTexture.loadFromFile("data/sprites/player.png");
-	
+	playerSpeed = 1;	
 }
 void drawPlayer(RenderWindow & window)
 {
-	RectangleShape playerTexture({20.f, 20.f});
+	RectangleShape playerTexture({player_size, player_size});
 	float width =static_cast<float> (playerTexture.getSize().x);
 	float length =static_cast<float> (playerTexture.getSize().y);
-	//Sprite playerSprite(playerTexture);
-	//playerSprite.setScale(Vector2f(80.f /width,85.f/length));
 	playerTexture.setFillColor(Color::Green);
 	playerTexture.setOutlineColor(Color::White);
 	playerTexture.setOutlineThickness(1.f);
@@ -27,11 +25,11 @@ void drawPlayer(RenderWindow & window)
 	window.draw(playerTexture);
 }
 using namespace Keyboard;
-void movePlayer(int windowWidth,int windowHeight)
+void movePlayer(int windowWidth,int windowHeight, int &player1X, int &player1Y)
 {
 	if (isKeyPressed(Key::D))
 	{
-		if (playerX + playerSpeed <=windowWidth)
+		if (playerX + playerSpeed <= (windowWidth-player_size))
 		{
 			playerX += playerSpeed;
 		}
@@ -52,11 +50,13 @@ void movePlayer(int windowWidth,int windowHeight)
 	}
 	else if (isKeyPressed(Key::S))
 	{
-		if (playerY + playerSpeed <= windowHeight)
+		if (playerY + playerSpeed <= (windowHeight-player_size))
 		{
 			playerY += playerSpeed;
 		}
 	}
+	player1X = playerX;
+	player1Y = playerY;
 	
 }
 

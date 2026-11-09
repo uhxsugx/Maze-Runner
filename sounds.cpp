@@ -1,4 +1,5 @@
 #include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 using namespace std;
@@ -50,4 +51,23 @@ void backgroundMusic(Music &music, int level)
     }
     music.setLooping(true);
     music.play();
+}
+
+void gunSound(Sound &sound, int mode)
+{
+    if(Keyboard::isKeyPressed(Keyboard::Key::Q))
+    {
+        sound.play();
+    }
+
+    if(mode == 2)
+    {
+        if(Keyboard::isKeyPressed(Keyboard::Key::RShift) || Keyboard::isKeyPressed(Keyboard::Key::LShift))
+        {
+            sound.play();
+        }
+    }
+    while (sound.getStatus() == Sound::Status::Playing) {
+        sleep(sf::milliseconds(10));
+    }
 }

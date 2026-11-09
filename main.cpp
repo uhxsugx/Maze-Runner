@@ -4,6 +4,7 @@
 #include "sounds.h"
 #include "menus.h"
 #include "player2.h"
+#include "enemies.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -17,15 +18,30 @@ int main()
 	int length = Gamewin.getSize().y;
 	initializePlayer();
 	initializePlayer2();
+	initializeBoss(width, length);
 	
 	Music music;
-	backgroundMusic(music, 5);
+	//backgroundMusic(music, 1);
+	
+	SoundBuffer gun_buffer;
+    if(!gun_buffer.loadFromFile("data/sounds/gunshot.mp3"))
+	return -1;
+    Sound gun_sound(gun_buffer);
+
+	
 	
 	bool break_flag = false;
 	int players = 1;
 	int health1 = 100;
 	int health2 = 100;
+	int player1X;
+	int player1Y;
+	int player2X;
+	int player2Y;
+	int bossHealth = 100;
 	bool isdead = false;
+	bool iswin = false;
+	bool ispaused = false;
 	int retry = 2;
 	int paused = 0;
 	while (Gamewin.isOpen())
@@ -42,85 +58,117 @@ int main()
 			}
 			if (const auto* keyPressed = event->getIf<Event::KeyPressed>())
 			{
-				if (keyPressed->code == Keyboard::Key::H)
+				if(keyPressed->code == Keyboard::Key::J)
 				{
-					health1 = takeDamage(10);
-				}
-
-				if(keyPressed->code == Keyboard::Key::I)
-				{
-					health2 = takeDamagePlayer2(20);
+					bossHealth = bossDamage(100);
 				}
 				if(keyPressed-> code == Keyboard::Key::Enter)
 					break_flag = true;
 				
 
-				if(!(keyPressed ->code == Keyboard::Key::R) && isdead)
+				if (keyPressed->code == Keyboard::Key::R && (isdead || iswin || ispaused))
+				{
+    				retry = 1;
+				}
+				else if(keyPressed->code != Keyboard::Key::R && (isdead || iswin))
 				{
 					retry = 0;
 				}
-				if((keyPressed ->code == Keyboard::Key::R) && isdead)
-				{
-					retry = 1;
-				}
+		
 				if(keyPressed -> code == Keyboard::Key::P)
 				paused++;
-				if((keyPressed ->code == Keyboard::Key::R) && isdead)
-				{
-					retry = 1;
-				}
+				
 			}
 		}
 		if(health1 <= 0 || health2 <= 0)
 		isdead = true;
 
-		Gamewin.clear();
-		if(!break_flag && isdead == false)
-			showMainMenu(Gamewin, width, length, players);
+		if(bossHealth <= 0)
+		iswin = true;
 
-		else if (break_flag && isdead == false)
+		if(paused %2 == 0)
+		ispaused = false;
+
+		else 
+		ispaused = true;
+
+		if(retry == 1)
+		{	
+			initializePlayer();
+			initializePlayer2();
+			initializeBoss(width, length);
+			health1 = 100;
+			health2 = 100;
+			bossHealth = 300;
+			retry = 2;
+			isdead = false;
+			iswin = false;
+			ispaused = false;
+			paused = 0;
+			//if you want to start at main menu then make break_flag = false;
+			// this is because the ainmenu nly opens if break_flag = false;
+			// if it is true then the game will automatically start
+			//break_flag = false;
+			continue;
+		}
+		else if(retry == 0)
+		break;
+
+		Gamewin.clear();
+		if(!break_flag && isdead == false && iswin == false)
+			showMainMenu(Gamewin, players);
+
+		else if(ispaused && break_flag && !isdead && iswin == false)
+		{	
+			pauseMenu(Gamewin);
+		}
+		else if (break_flag && isdead == false && iswin == false)
 		{
+			drawBossBar(Gamewin);
+			drawBoss(Gamewin);
 			DrawHealthBar(Gamewin);
-			if(paused%2 == 0)
-			movePlayer(width,length);
 			drawPlayer(Gamewin);
+			if(!ispaused)
+			{
+				movePlayer(width,length, player1X, player1Y);
+				gunSound(gun_sound, players);
+				int ishit = moveBoss(Gamewin, player1X, player1Y, player2X, player2Y, players);
+				//cout << "|" << player1X << ", " << player1Y << endl;
+				if(ishit == 1)
+				health1 = takeDamage(10);
+
+				else if (ishit == 2)
+				health2 = takeDamagePlayer2(10);
+
+			}
 
 			if(players == 2)
 			{
 				drawPlayer2(Gamewin);
-				if(paused%2 == 0)
-				movePlayer2(width, length);
 				DrawHealthBarPlayer2(Gamewin);
+				if(!ispaused)
+				{
+					movePlayer2(width, length, player2X, player2Y);
+				}
+				
 			}
 
 		}
 
 		
-		else if(isdead)
+
+		else if(isdead && iswin == false)
 		{
-			showGameOverScreen(Gamewin, width, length);
-			if(retry == 0)
-				break;
-			else if(retry == 1)
-			{	
-				initializePlayer();
-				initializePlayer2();
-				health1 = 100;
-				health2 = 100;
-				retry = 2;
-				isdead = false;
-				//if you want to start at main menu then make break_flag = false;
-				// this is because the ainmenu nly opens if break_flag = false;
-				// if it is true then the game will automatically start
-				//break_flag = false;
-				continue;
-			}
+			showGameOverScreen(Gamewin);
 		}
 
-		if(paused%2 != 0 && break_flag && !isdead)
-		{	
-			pauseMenu(Gamewin, width, length);
+		
+
+		else if(iswin == true && !isdead)
+		{
+			winScreen(Gamewin);
 		}
+
 		
 		
 

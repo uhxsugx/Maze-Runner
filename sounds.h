@@ -9,4 +9,6 @@
 #include <SFML/Graphics.hpp>
 
 int backgroundMusic(sf::Music &music, int level);
+void gunSound(sf::Sound &sound, int mode);
+
 #endif // MY_HEADER_H
