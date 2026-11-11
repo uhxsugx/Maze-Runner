@@ -1,10 +1,11 @@
-// Build: g++ main.cpp player.cpp player2.cpp sounds.cpp menus.cpp -std=c++17 -O2 -o MazeRunner.exe -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+// Build: g++ main.cpp player.cpp player2.cpp enemies.cpp map.cpp sounds.cpp menus.cpp -std=c++17 -O2 -o MazeRunner.exe -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 #include<iostream>
 #include "player.h"
 #include "sounds.h"
 #include "menus.h"
 #include "player2.h"
 #include "enemies.h"
+#include "map.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -19,9 +20,11 @@ int main()
 	initializePlayer();
 	initializePlayer2();
 	initializeBoss(width, length);
+	initializeEnemies(width, length);
+	initializeGun(2.0);
 	
 	Music music;
-	//backgroundMusic(music, 1);
+	backgroundMusic(music, 4);
 	
 	SoundBuffer gun_buffer;
     if(!gun_buffer.loadFromFile("data/sounds/gunshot.mp3"))
@@ -34,14 +37,15 @@ int main()
 	int players = 1;
 	int health1 = 100;
 	int health2 = 100;
-	int player1X;
-	int player1Y;
-	int player2X;
-	int player2Y;
-	int bossHealth = 100;
+	int player1X = 100;
+	int player1Y = 100;
+	int player2X = 250;
+	int player2Y = 100;
+	int bossHealth = 750;
 	bool isdead = false;
 	bool iswin = false;
 	bool ispaused = false;
+	bool qHeld = false;
 	int retry = 2;
 	int paused = 0;
 	while (Gamewin.isOpen())
@@ -62,6 +66,12 @@ int main()
 				{
 					bossHealth = bossDamage(100);
 				}
+				if(keyPressed->code == Keyboard::Key::Q)
+				{
+					if(!qHeld && break_flag && !ispaused && !isdead && !iswin)
+						shootGun(player1X, player1Y);
+					qHeld = true;
+				}
 				if(keyPressed-> code == Keyboard::Key::Enter)
 					break_flag = true;
 				
@@ -70,7 +80,7 @@ int main()
 				{
     				retry = 1;
 				}
-				else if(keyPressed->code != Keyboard::Key::R && (isdead || iswin))
+				else if(keyPressed->code == Keyboard::Key::Enter && (isdead || iswin))
 				{
 					retry = 0;
 				}
@@ -79,8 +89,13 @@ int main()
 				paused++;
 				
 			}
+			if(const auto* keyReleased = event->getIf<Event::KeyReleased>())
+			{
+				if(keyReleased->code == Keyboard::Key::Q)
+					qHeld = false;
+			}
 		}
-		if(health1 <= 0 || health2 <= 0)
+		if(health1 <= 0 && health2 <= 0)
 		isdead = true;
 
 		if(bossHealth <= 0)
@@ -97,6 +112,8 @@ int main()
 			initializePlayer();
 			initializePlayer2();
 			initializeBoss(width, length);
+			initializeEnemies(width, length);
+			initializeGun(20.0f);
 			health1 = 100;
 			health2 = 100;
 			bossHealth = 300;
@@ -124,22 +141,40 @@ int main()
 		}
 		else if (break_flag && isdead == false && iswin == false)
 		{
-			drawBossBar(Gamewin);
-			drawBoss(Gamewin);
+			make_maze(Gamewin);
+			//drawBossBar(Gamewin);
+			//drawBoss(Gamewin);
+			//drawEnemies(Gamewin);
 			DrawHealthBar(Gamewin);
 			drawPlayer(Gamewin);
 			if(!ispaused)
 			{
 				movePlayer(width,length, player1X, player1Y);
 				gunSound(gun_sound, players);
-				int ishit = moveBoss(Gamewin, player1X, player1Y, player2X, player2Y, players);
-				//cout << "|" << player1X << ", " << player1Y << endl;
-				if(ishit == 1)
+				int bossHits = moveBoss(Gamewin, player1X, player1Y, player2X, player2Y, players);
+				int enemyHits = moveEnemies(player1X, player1Y, player2X, player2Y, players);
+				moveGun(Gamewin);
+				bossHealth = getBossHealth();
+				
+				if(bossHits == 1)
 				health1 = takeDamage(10);
-
-				else if (ishit == 2)
+				if(bossHits == 2)
 				health2 = takeDamagePlayer2(10);
+				if(bossHits == 3)
+				{
+					health1 = takeDamage(10);
+					health2 = takeDamagePlayer2(10);
+				}
 
+				if(enemyHits == 1)
+				health1 = takeDamage(10);
+				if(enemyHits == 2)
+				health2 = takeDamagePlayer2(10);
+				if(enemyHits == 3)
+				{
+					health2 = takeDamagePlayer2(10);
+					health1 = takeDamage(10);
+				}
 			}
 
 			if(players == 2)
@@ -174,4 +209,5 @@ int main()
 
 		Gamewin.display();
 	}
+	cout << width << " x " << length << endl;
 }

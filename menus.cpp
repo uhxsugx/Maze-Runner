@@ -57,7 +57,7 @@ void showGameOverScreen(RenderWindow &window)
     text.setPosition(Vector2f(250, 150));
     window.draw(text);
 
-    Text retry_info(font, "Press R to retry and any other key to exit", 25);
+    Text retry_info(font, "Press R to retry and Enter to exit", 25);
     retry_info.setFillColor(Color::White);
     retry_info.setPosition({250.f, 250.f});
     window.draw(retry_info);
@@ -107,7 +107,7 @@ void winScreen(RenderWindow &window)
     text.setPosition(Vector2f(250, 150));
     window.draw(text);
 
-    Text retry_info(font, "Press R to retry and any other key to exit", 25);
+    Text retry_info(font, "Press R to retry and Enter to exit", 25);
     retry_info.setFillColor(Color::White);
     retry_info.setPosition({250.f, 250.f});
     window.draw(retry_info);

@@ -1,14 +1,16 @@
 
 #include <SFML/Graphics.hpp>
+#include "map.h"
 using namespace std;
 using namespace sf;
 int player2X, player2Y, player2Health, player2Speed;
 float player2_size = 20.0;
+RectangleShape playerTexture2({player2_size, player2_size});
 
 void initializePlayer2()
 {
-    player2X = 250;
-    player2Y = 100;
+    player2X = 60;
+    player2Y = 30;
     player2Health = 100;
     player2Speed = 1;
 
@@ -16,14 +18,13 @@ void initializePlayer2()
 
 void drawPlayer2(RenderWindow& window)
 {
-    RectangleShape playerTexture({player2_size, player2_size});
-	float width =static_cast<float> (playerTexture.getSize().x);
-	float length =static_cast<float> (playerTexture.getSize().y);
-	playerTexture.setFillColor(Color::Blue);
-	playerTexture.setOutlineColor(Color::White);
-	playerTexture.setOutlineThickness(1.f);
-	playerTexture.setPosition(Vector2f(player2X, player2Y));
-	window.draw(playerTexture);
+	float width =static_cast<float> (playerTexture2.getSize().x);
+	float length =static_cast<float> (playerTexture2.getSize().y);
+	playerTexture2.setFillColor(Color::Blue);
+	playerTexture2.setOutlineColor(Color::White);
+	playerTexture2.setOutlineThickness(1.f);
+	playerTexture2.setPosition(Vector2f(player2X, player2Y));
+	window.draw(playerTexture2);
 }
 
 using namespace Keyboard;
@@ -32,28 +33,32 @@ void movePlayer2(int windowWidth, int windowHeight, int &playerX2, int &playerY2
 {
     if (isKeyPressed(Key::Right))
     {
-        if (player2X + player2Speed <= (windowWidth-player2_size))
+        if (player2X + player2Speed <= (windowWidth-player2_size) &&
+            !mazeCollision(player2X + player2Speed, player2Y, player2_size, player2_size))
         {
             player2X += player2Speed;
         }
     }
     else if (isKeyPressed(Key::Left))
     {
-        if (player2X - player2Speed >= 0)
+        if (player2X - player2Speed >= 0 &&
+            !mazeCollision(player2X - player2Speed, player2Y, player2_size, player2_size))
         {
             player2X -= player2Speed;
         }
     }
     else if (isKeyPressed(Key::Up))
     {
-        if (player2Y - player2Speed >= 0)
+        if (player2Y - player2Speed >= 0 &&
+            !mazeCollision(player2X, player2Y - player2Speed, player2_size, player2_size))
         {
             player2Y -= player2Speed;
         }
     }
     else if (isKeyPressed(Key::Down))
     {
-        if (player2Y + player2Speed <= (windowHeight-player2_size))
+        if (player2Y + player2Speed <= (windowHeight-player2_size) &&
+            !mazeCollision(player2X, player2Y + player2Speed, player2_size, player2_size))
         {
             player2Y += player2Speed;
         }
@@ -103,4 +108,3 @@ void DrawHealthBarPlayer2(RenderWindow& window)
 
     window.draw(currentHealth);
 }
-

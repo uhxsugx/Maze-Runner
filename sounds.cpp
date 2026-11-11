@@ -50,24 +50,19 @@ void backgroundMusic(Music &music, int level)
         }
     }
     music.setLooping(true);
+    music.setVolume(25);
     music.play();
 }
 
 void gunSound(Sound &sound, int mode)
 {
-    if(Keyboard::isKeyPressed(Keyboard::Key::Q))
-    {
-        sound.play();
-    }
+    bool shoot = Keyboard::isKeyPressed(Keyboard::Key::Q);
 
     if(mode == 2)
     {
-        if(Keyboard::isKeyPressed(Keyboard::Key::RShift) || Keyboard::isKeyPressed(Keyboard::Key::LShift))
-        {
-            sound.play();
-        }
+        shoot = shoot || Keyboard::isKeyPressed(Keyboard::Key::RShift) || Keyboard::isKeyPressed(Keyboard::Key::LShift);
     }
-    while (sound.getStatus() == Sound::Status::Playing) {
-        sleep(sf::milliseconds(10));
-    }
+
+    if(shoot && sound.getStatus() != Sound::Status::Playing)
+        sound.play();
 }

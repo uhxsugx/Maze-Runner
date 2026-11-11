@@ -1,4 +1,5 @@
 #include<SFML/Graphics.hpp>
+#include "map.h"
 #include <iostream>
 using namespace std;
 using namespace sf;
@@ -8,8 +9,8 @@ float player_size = 20.0;
 
 void initializePlayer()
 {
-	playerX = 100;
-	playerY = 100;
+	playerX = 30;
+	playerY = 30;
 	playerHealth = 100;
 	playerSpeed = 1;	
 }
@@ -29,28 +30,32 @@ void movePlayer(int windowWidth,int windowHeight, int &player1X, int &player1Y)
 {
 	if (isKeyPressed(Key::D))
 	{
-		if (playerX + playerSpeed <= (windowWidth-player_size))
+		if (playerX + playerSpeed <= (windowWidth-player_size) &&
+			!mazeCollision(playerX + playerSpeed, playerY, player_size, player_size))
 		{
 			playerX += playerSpeed;
 		}
 	}
 	else if (isKeyPressed(Key::A))
 	{
-		if (playerX - playerSpeed >= 0)
+		if (playerX - playerSpeed >= 0 &&
+			!mazeCollision(playerX - playerSpeed, playerY, player_size, player_size))
 		{
 			playerX -= playerSpeed;
 		}
 	}
 	else if (isKeyPressed(Key::W))
 	{
-		if (playerY - playerSpeed >= 0)
+		if (playerY - playerSpeed >= 0 &&
+			!mazeCollision(playerX, playerY - playerSpeed, player_size, player_size))
 		{
 			playerY -= playerSpeed;
 		}
 	}
 	else if (isKeyPressed(Key::S))
 	{
-		if (playerY + playerSpeed <= (windowHeight-player_size))
+		if (playerY + playerSpeed <= (windowHeight-player_size) &&
+			!mazeCollision(playerX, playerY + playerSpeed, player_size, player_size))
 		{
 			playerY += playerSpeed;
 		}
