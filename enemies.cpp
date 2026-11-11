@@ -2,6 +2,7 @@
 #include "player.h"
 #include "player2.h"
 #include "map.h"
+#include "sounds.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -14,6 +15,9 @@ using namespace sf;
 extern int playerX, playerY;
 extern RectangleShape playerTexture2;
 extern RectangleShape playerTexture;
+
+    
+
 
 double distance(float x1, float x2, float y1, float y2);
 
@@ -179,7 +183,7 @@ double distance(float x1, float x2, float y1, float y2)
 
 void initializeEnemies(int width, int length)
 {
-    enemySpeed = 0.25;
+    enemySpeed = 0.75;
 
     for(int i = 0; i < enemyCount; i++)
     {
@@ -187,14 +191,16 @@ void initializeEnemies(int width, int length)
         enemy[i].setFillColor(Color::Red);
         enemy[i].setOrigin(Vector2f(enemy_size, enemy_size));
 
-        if(i % 4 == 0)
-            enemy[i].setPosition(Vector2f((i + 1) * width / (enemyCount + 1), enemy_size));
-        else if(i % 4 == 1)
-            enemy[i].setPosition(Vector2f(width - enemy_size, (i + 1) * length / (enemyCount + 1)));
-        else if(i % 4 == 2)
-            enemy[i].setPosition(Vector2f((i + 1) * width / (enemyCount + 1), length - enemy_size));
-        else
-            enemy[i].setPosition(Vector2f(enemy_size, (i + 1) * length / (enemyCount + 1)));
+        
+        enemy[i].setPosition(Vector2f(29.0f * 30.0f + 15, 24.0f * 30.0f + 15));
+        // if(i % 4 == 0)
+            //enemy[i].setPosition(Vector2f((i + 1) * width / (enemyCount + 1), enemy_size));
+        // else if(i % 4 == 1)
+        //     enemy[i].setPosition(Vector2f(width - enemy_size, (i + 1) * length / (enemyCount + 1)));
+        // else if(i % 4 == 2)
+        //     enemy[i].setPosition(Vector2f((i + 1) * width / (enemyCount + 1), length - enemy_size));
+        // else
+        //     enemy[i].setPosition(Vector2f(enemy_size, (i + 1) * length / (enemyCount + 1)));
 
         enemyActive[i] = true;
         enemyTouchingPlayer1[i] = false;
@@ -255,8 +261,16 @@ void shootGun(int playerX, int playerY)
     }
 }
 
-void moveGun(RenderWindow &window)
+void moveGun(RenderWindow &window, Sound &bossHurtEffect, Sound &mummiesHurtEffect,
+             int player2X, int player2Y, int mode)
 {
+    static bool shiftHeld = false;
+    bool shiftPressed = Keyboard::isKeyPressed(Keyboard::Key::LShift) ||
+                        Keyboard::isKeyPressed(Keyboard::Key::RShift);
+    if(shiftPressed && !shiftHeld && mode == 2)
+        shootGun(player2X, player2Y);
+    shiftHeld = shiftPressed;
+
     if(!gunActive)
         return;
 
@@ -297,9 +311,13 @@ void moveGun(RenderWindow &window)
     if(targetDistance <= 0.0001f)
     {
         if(gunTargetsBoss)
+        {
             bossDamage(50);
+            bosshurtSound(bossHurtEffect);
+        }
         else
         {
+            mummiesHurtSound(mummiesHurtEffect);
             enemyActive[gunTargetEnemy] = false;
             enemyTouchingPlayer1[gunTargetEnemy] = false;
             enemyTouchingPlayer2[gunTargetEnemy] = false;
@@ -323,6 +341,7 @@ void moveGun(RenderWindow &window)
                                 enemy[i].getPosition().y, enemy_size))
             {
                 enemyActive[i] = false;
+                mummiesHurtSound(mummiesHurtEffect);
                 enemyTouchingPlayer1[i] = false;
                 enemyTouchingPlayer2[i] = false;
                 gunActive = false;
@@ -337,6 +356,7 @@ void moveGun(RenderWindow &window)
                             bossY + boss_size, boss_size))
         {
             bossDamage(50);
+            bosshurtSound(bossHurtEffect);
             gunActive = false;
             gunReloadClock.restart();
             gunReloading = true;
@@ -346,12 +366,16 @@ void moveGun(RenderWindow &window)
         if(targetDistance <= gunSpeed + targetRadius)
         {
             if(gunTargetsBoss)
+            {
                 bossDamage(50);
+                bosshurtSound(bossHurtEffect);
+            }
             else
             {
                 enemyActive[gunTargetEnemy] = false;
                 enemyTouchingPlayer1[gunTargetEnemy] = false;
                 enemyTouchingPlayer2[gunTargetEnemy] = false;
+                mummiesHurtSound(mummiesHurtEffect);
             }
             gunActive = false;
             gunReloadClock.restart();

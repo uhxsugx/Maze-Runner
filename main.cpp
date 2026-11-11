@@ -1,4 +1,4 @@
-// Build: g++ main.cpp player.cpp player2.cpp enemies.cpp map.cpp sounds.cpp menus.cpp -std=c++17 -O2 -o MazeRunner.exe -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+// g++ main.cpp player.cpp player2.cpp enemies.cpp map.cpp sounds.cpp menus.cpp -std=c++17 -O2 -o MazeRunner.exe -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 #include<iostream>
 #include "player.h"
 #include "sounds.h"
@@ -23,24 +23,39 @@ int main()
 	initializeEnemies(width, length);
 	initializeGun(2.0);
 	
+	int level = 1;
 	Music music;
-	backgroundMusic(music, 4);
+	backgroundMusic(music, level);
 	
 	SoundBuffer gun_buffer;
     if(!gun_buffer.loadFromFile("data/sounds/gunshot.mp3"))
 	return -1;
     Sound gun_sound(gun_buffer);
 
-	
+	SoundBuffer damage_buffer;
+	if(!damage_buffer.loadFromFile("data/sounds/takedamage.wav"))
+	return -1;
+
+	Sound damage_sound(damage_buffer);
+
+	SoundBuffer boss_hurt_buffer;
+    if(!boss_hurt_buffer.loadFromFile("data/sounds/bossDamage.wav"))
+	return -1;
+    Sound boss_hurt_sound(boss_hurt_buffer);
+
+	SoundBuffer mummies_hurt_buffer;
+	if(!mummies_hurt_buffer.loadFromFile("data/sounds/mummiesDamage.wav"))
+	return -1;
+	Sound mummies_hurt_sound(mummies_hurt_buffer);
 	
 	bool break_flag = false;
 	int players = 1;
 	int health1 = 100;
 	int health2 = 100;
-	int player1X = 100;
-	int player1Y = 100;
-	int player2X = 250;
-	int player2Y = 100;
+	int player1X = 30;
+	int player1Y = 30;
+	int player2X = 60;
+	int player2Y = 30;
 	int bossHealth = 750;
 	bool isdead = false;
 	bool iswin = false;
@@ -48,8 +63,10 @@ int main()
 	bool qHeld = false;
 	int retry = 2;
 	int paused = 0;
+	int random = 0;
 	while (Gamewin.isOpen())
 	{
+	gameLoop:
 		while (optional<Event> event = Gamewin.pollEvent())
 		{
 			if (event->is<Event::Closed>())
@@ -65,6 +82,7 @@ int main()
 				if(keyPressed->code == Keyboard::Key::J)
 				{
 					bossHealth = bossDamage(100);
+					//bosshurtSound(boss_hurt_sound);
 				}
 				if(keyPressed->code == Keyboard::Key::Q)
 				{
@@ -72,8 +90,15 @@ int main()
 						shootGun(player1X, player1Y);
 					qHeld = true;
 				}
+				if(keyPressed->code == Keyboard::Key::T && break_flag == false)
+				{
+					level = 4;
+					backgroundMusic(music, level);
+					break_flag = true;
+				}
 				if(keyPressed-> code == Keyboard::Key::Enter)
 					break_flag = true;
+				
 				
 
 				if (keyPressed->code == Keyboard::Key::R && (isdead || iswin || ispaused))
@@ -84,6 +109,7 @@ int main()
 				{
 					retry = 0;
 				}
+				
 		
 				if(keyPressed -> code == Keyboard::Key::P)
 				paused++;
@@ -95,11 +121,11 @@ int main()
 					qHeld = false;
 			}
 		}
-		if(health1 <= 0 && health2 <= 0)
+		if(health1 <= 0 || health2 <= 0)
 		isdead = true;
 
-		if(bossHealth <= 0)
-		iswin = true;
+		if(level == 5 && bossHealth <= 0)
+			iswin = true;
 
 		if(paused %2 == 0)
 		ispaused = false;
@@ -113,10 +139,16 @@ int main()
 			initializePlayer2();
 			initializeBoss(width, length);
 			initializeEnemies(width, length);
-			initializeGun(20.0f);
+			initializeGun(2.0f);
+			level = 1;
+			backgroundMusic(music, level);
 			health1 = 100;
 			health2 = 100;
-			bossHealth = 300;
+			bossHealth = getBossHealth();
+			player1X = 30;
+			player1Y = 30;
+			player2X = 60;
+			player2Y = 30;
 			retry = 2;
 			isdead = false;
 			iswin = false;
@@ -141,39 +173,60 @@ int main()
 		}
 		else if (break_flag && isdead == false && iswin == false)
 		{
-			make_maze(Gamewin);
-			//drawBossBar(Gamewin);
-			//drawBoss(Gamewin);
-			//drawEnemies(Gamewin);
+			if(level == 5)
+			{
+				makebossroom(Gamewin);
+				drawBossBar(Gamewin);
+				drawBoss(Gamewin);
+				int bossHits = moveBoss(Gamewin, player1X, player1Y, player2X, player2Y, players);
+				if(bossHits == 1)
+				{
+					health1 = takeDamage(10);
+					damageSound(damage_sound);
+				}
+				if(bossHits == 2)
+				{
+					health2 = takeDamagePlayer2(10);
+					damageSound(damage_sound);
+				}
+				if(bossHits == 3)
+				{
+					health1 = takeDamage(10);
+					health2 = takeDamagePlayer2(10);
+					damageSound(damage_sound);
+				}
+			}
+			else
+				make_maze(Gamewin);
+			
+			drawEnemies(Gamewin);
 			DrawHealthBar(Gamewin);
 			drawPlayer(Gamewin);
 			if(!ispaused)
 			{
 				movePlayer(width,length, player1X, player1Y);
 				gunSound(gun_sound, players);
-				int bossHits = moveBoss(Gamewin, player1X, player1Y, player2X, player2Y, players);
 				int enemyHits = moveEnemies(player1X, player1Y, player2X, player2Y, players);
-				moveGun(Gamewin);
+				moveGun(Gamewin, boss_hurt_sound, mummies_hurt_sound, player2X, player2Y, players);
 				bossHealth = getBossHealth();
 				
-				if(bossHits == 1)
-				health1 = takeDamage(10);
-				if(bossHits == 2)
-				health2 = takeDamagePlayer2(10);
-				if(bossHits == 3)
-				{
-					health1 = takeDamage(10);
-					health2 = takeDamagePlayer2(10);
-				}
+				
 
 				if(enemyHits == 1)
-				health1 = takeDamage(10);
+				{
+					health1 = takeDamage(10);
+					damageSound(damage_sound);
+				}
 				if(enemyHits == 2)
-				health2 = takeDamagePlayer2(10);
+				{
+					health2 = takeDamagePlayer2(10);
+					damageSound(damage_sound);
+				}
 				if(enemyHits == 3)
 				{
 					health2 = takeDamagePlayer2(10);
 					health1 = takeDamage(10);
+					damageSound(damage_sound);
 				}
 			}
 
@@ -185,7 +238,34 @@ int main()
 				{
 					movePlayer2(width, length, player2X, player2Y);
 				}
-				
+					
+			}
+
+			bool completedMaze = level < 5 &&
+				(mazeCompleted(player1X, player1Y, 20.0f, 20.0f) ||
+				 (players == 2 && mazeCompleted(player2X, player2Y, 20.0f, 20.0f)));
+			if(completedMaze)
+			{
+				level++;
+				if(level > 5)
+					iswin = true;
+				else
+				{
+					initializePlayer();
+					initializePlayer2();
+					initializeBoss(width, length);
+					initializeEnemies(width, length);
+					initializeGun(2.0f);
+					player1X = 30;
+					player1Y = 30;
+					player2X = 60;
+					player2Y = 30;
+					health1 = 100;
+					health2 = 100;
+					bossHealth = getBossHealth();
+					backgroundMusic(music, level);
+					goto gameLoop;
+				}
 			}
 
 		}
