@@ -76,7 +76,7 @@ If you prefer to build from the command line, clone the repository, make sure SF
 g++ main.cpp player.cpp player2.cpp enemies.cpp map.cpp sounds.cpp menus.cpp -std=c++17 -O2 -o MazeRunner.exe -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 ```
 
-This compiles the source files and produces `MazeRunner.exe`, which you can then run directly.
+This compiles the source files and produces `MazeRunner.exe`, which you can then run directly. However it only works with the g++ compiler and only in vscode's terminal. So be carefull.
 
 ## Development Team
 
