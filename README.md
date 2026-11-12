@@ -80,9 +80,9 @@ This compiles the source files and produces `MazeRunner.exe`, which you can then
 
 ## Development Team
 
-- Muhammad Umer Saeed
-- Huzaifa Mustafa
-- Muhammad Kazim Raza
+- Muhammad Umer Saeed  (26L-0747)
+- Huzaifa Mustafa      (26L-0748)
+- Muhammad Kazim Raza  (26L-0782)
 
 ## Future Improvements
 
