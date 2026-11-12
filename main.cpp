@@ -21,7 +21,7 @@ int main()
 	initializePlayer2();
 	initializeBoss(width, length);
 	initializeEnemies(width, length);
-	initializeGun(2.0);
+	initializeGun(3.0);
 	
 	int level = 1;
 	Music music;
