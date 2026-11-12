@@ -55,7 +55,7 @@ Players explore Egyptian-themed mazes filled with challenges, including a health
 - **C++17**
 - **SFML 3.x**
 - **Visual Studio 2022**
-- **Git and GitHub**
+- **GitHub for collaborative programming**
 
 ## Installation and Setup
 
