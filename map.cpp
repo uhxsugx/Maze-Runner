@@ -44,20 +44,18 @@ string map[100];
 
 void generateMaze()
 {
-    // Copy the original layout so shortcuts don't carry over between rounds.
     for (int row = 0; row < 100; row++)
     {
         map[row] = originalMap[row];
     }
 
-    // Try 60 random spots, skipping the outside edges.
     for (int attempt = 0; attempt < 60; attempt++)
     {
         int row = 1 + rand() % 23;
         int columns = static_cast<int>(map[row].size());
         int column = 1 + rand() % (columns - 2);
 
-        // Open a wall if there is a path on its left and right.
+    
         if (map[row][column] == '#' &&
             map[row][column - 1] == ' ' &&
             map[row][column + 1] == ' ')
