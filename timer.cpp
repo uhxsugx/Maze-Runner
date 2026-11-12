@@ -1,4 +1,3 @@
-
 #include "timer.h"
 
 GameTimer::GameTimer(int seconds)
