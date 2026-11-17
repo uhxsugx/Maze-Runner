@@ -1,0 +1,38 @@
+﻿{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build Maze Runner",
+            "command": "g++",
+            "args": [
+                "-std=c++17",
+                "-O2",
+                "main.cpp",
+                "player.cpp",
+                "player2.cpp",
+                "enemies.cpp",
+                "map.cpp",
+                "sounds.cpp",
+                "menus.cpp",
+                "-lsfml-graphics",
+                "-lsfml-window",
+                "-lsfml-system",
+                "-lsfml-audio",
+                "-o",
+                "MazeRunner.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compile Maze Runner with G++ and SFML 3.1.0 using relative paths"
+        }
+    ]
+}

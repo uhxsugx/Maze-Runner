@@ -39,7 +39,7 @@ void movePlayer2(int windowWidth, int windowHeight, int &playerX2, int &playerY2
             player2X += player2Speed;
         }
     }
-    else if (isKeyPressed(Key::Left))
+    if (isKeyPressed(Key::Left))
     {
         if (player2X - player2Speed >= 0 &&
             !mazeCollision(player2X - player2Speed, player2Y, player2_size, player2_size))
@@ -47,7 +47,7 @@ void movePlayer2(int windowWidth, int windowHeight, int &playerX2, int &playerY2
             player2X -= player2Speed;
         }
     }
-    else if (isKeyPressed(Key::Up))
+    if (isKeyPressed(Key::Up))
     {
         if (player2Y - player2Speed >= 0 &&
             !mazeCollision(player2X, player2Y - player2Speed, player2_size, player2_size))
@@ -55,7 +55,7 @@ void movePlayer2(int windowWidth, int windowHeight, int &playerX2, int &playerY2
             player2Y -= player2Speed;
         }
     }
-    else if (isKeyPressed(Key::Down))
+    if (isKeyPressed(Key::Down))
     {
         if (player2Y + player2Speed <= (windowHeight-player2_size) &&
             !mazeCollision(player2X, player2Y + player2Speed, player2_size, player2_size))

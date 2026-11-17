@@ -92,7 +92,7 @@ int main()
 				}
 				if(keyPressed->code == Keyboard::Key::T && break_flag == false)
 				{
-					level = 4;
+					level = 5;
 					backgroundMusic(music, level);
 					break_flag = true;
 				}
@@ -283,10 +283,6 @@ int main()
 		{
 			winScreen(Gamewin);
 		}
-
-		
-		
-
 		Gamewin.display();
 	}
 	cout << width << " x " << length << endl;

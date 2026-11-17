@@ -1,0 +1,9 @@
+﻿{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 500,
+    "code-runner.runInTerminal": true,
+    "code-runner.fileDirectoryAsCwd": true,
+    "code-runner.executorMap": {
+        "cpp": "cd $dir && g++ main.cpp player.cpp player2.cpp enemies.cpp map.cpp sounds.cpp menus.cpp -std=c++17 -O2 -o MazeRunner.exe -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio && .\\MazeRunner.exe"
+    }
+}
