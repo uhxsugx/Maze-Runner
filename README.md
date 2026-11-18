@@ -82,7 +82,6 @@ This compiles the source files and produces `MazeRunner.exe`, which you can then
 
 - Muhammad Umer Saeed
 - Huzaifa Mustafa
-- Muhammad Kazim Raza
 
 ## Future Improvements
 
