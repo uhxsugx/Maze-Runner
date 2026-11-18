@@ -6,6 +6,15 @@ using namespace Keyboard;
 
 void showMainMenu(RenderWindow &window, int &mode)
 {
+    Texture backgroundTexture;
+    if(!backgroundTexture.loadFromFile("data/images/Ancient Egyptian Temple Maze.png"))
+    {
+        cout << "Image not found !" << endl;
+        return;
+    }
+    Sprite background(backgroundTexture); 
+    background.setScale({(float)window.getSize().x/backgroundTexture.getSize().x, (float)window.getSize().y/backgroundTexture.getSize().y});
+    window.draw(background);
     Font font;
     if (!font.openFromFile("data/fonts/ARIAL.ttf"))
     {
@@ -45,6 +54,15 @@ void showMainMenu(RenderWindow &window, int &mode)
 
 void showGameOverScreen(RenderWindow &window)
 {
+    Texture backgroundTexture;
+    if(!backgroundTexture.loadFromFile("data/images/Ancient Egyptian Temple Maze.png"))
+    {
+        cout << "Image not found !" << endl;
+        return;
+    }
+    Sprite background(backgroundTexture);
+    background.setScale({(float)window.getSize().x/backgroundTexture.getSize().x, (float)window.getSize().y/backgroundTexture.getSize().y});
+    window.draw(background);
     Font font;
     if(!font.openFromFile("data/fonts/ARIAL.ttf"))
     {
@@ -67,6 +85,15 @@ void showGameOverScreen(RenderWindow &window)
 
 void pauseMenu(RenderWindow &window)
 {
+    Texture backgroundTexture;
+    if(!backgroundTexture.loadFromFile("data/images/Ancient Egyptian Temple Maze.png"))
+    {
+        cout << "Image not found !" << endl;
+        return;
+    }
+    Sprite background(backgroundTexture);
+    background.setScale({(float)window.getSize().x/backgroundTexture.getSize().x, (float)window.getSize().y/backgroundTexture.getSize().y});
+    window.draw(background);
     Font font;
     if(!font.openFromFile("data/fonts/ARIAL.ttf"))
     {
@@ -95,6 +122,15 @@ void pauseMenu(RenderWindow &window)
 
 void winScreen(RenderWindow &window)
 {
+    Texture backgroundTexture;
+    if(!backgroundTexture.loadFromFile("data/images/Ancient Egyptian Temple Maze.png"))
+    {
+        cout << "Image not found !" << endl;
+        return;
+    }
+    Sprite background(backgroundTexture);
+    background.setScale({(float)window.getSize().x/backgroundTexture.getSize().x, (float)window.getSize().y/backgroundTexture.getSize().y});
+    window.draw(background);
     Font font;
     if(!font.openFromFile("data/fonts/ARIAL.ttf"))
     {
