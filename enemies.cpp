@@ -1,3 +1,4 @@
+#include<cstdlib>
 #include <SFML/Graphics.hpp>
 #include "player.h"
 #include "player2.h"
@@ -11,14 +12,11 @@
 
 using namespace std;
 using namespace sf;
-
+extern string* selectedMap;
 extern int playerX, playerY;
 extern RectangleShape playerTexture2;
 extern RectangleShape playerTexture;
-
-    
-
-
+extern int player2Y,player2X;
 double distance(float x1, float x2, float y1, float y2);
 
 int bossHealth;
@@ -181,7 +179,8 @@ double distance(float x1, float x2, float y1, float y2)
     return distance;
 }
 
-void initializeEnemies(int width, int length)
+
+void initializeEnemies(int width, int length, int mode)
 {
     enemySpeed = 0.75;
 
@@ -190,23 +189,63 @@ void initializeEnemies(int width, int length)
         enemy[i].setRadius(enemy_size);
         enemy[i].setFillColor(Color::Red);
         enemy[i].setOrigin(Vector2f(enemy_size, enemy_size));
+        int r, c;
+        float spawnX, spawnY;
+        bool validPosition = false;
 
-        
-        enemy[i].setPosition(Vector2f(29.0f * 30.0f + 15, 24.0f * 30.0f + 15));
-        // if(i % 4 == 0)
-            //enemy[i].setPosition(Vector2f((i + 1) * width / (enemyCount + 1), enemy_size));
-        // else if(i % 4 == 1)
-        //     enemy[i].setPosition(Vector2f(width - enemy_size, (i + 1) * length / (enemyCount + 1)));
-        // else if(i % 4 == 2)
-        //     enemy[i].setPosition(Vector2f((i + 1) * width / (enemyCount + 1), length - enemy_size));
-        // else
-        //     enemy[i].setPosition(Vector2f(enemy_size, (i + 1) * length / (enemyCount + 1)));
+        while(!validPosition)
+        {
+            r= rand() % 25;
+            c = rand() % selectedMap[r].size();
+
+            if(selectedMap[r][c] == ' ')
+            {
+                spawnX = c * 30.0f + 15.0f;
+                spawnY = r * 30.0f + 15.0f;
+
+                validPosition = true;
+
+                // Keep away from Player 1
+                if(distance(spawnX, playerX + 10,
+                            spawnY, playerY + 10) < 75)
+                {
+                    validPosition = false;
+                }
+
+                // Keep away from Player 2
+                if(mode != 1 &&  distance(spawnX, player2X + 10, spawnY, player2Y + 10) < 75)
+                {
+                    validPosition = false;
+                }
+                // Keeps enemies away from exit.
+                if(r == 24 && c == 29)
+                {
+                    validPosition = false;
+                }
+
+                // Keep enemies separated
+                for(int j = 0; j < i; j++)
+                {
+                    Vector2f previousEnemy = enemy[j].getPosition();
+
+                    if(distance(spawnX, previousEnemy.x,
+                                spawnY, previousEnemy.y) < 60)
+                    {
+                        validPosition = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        enemy[i].setPosition(Vector2f(spawnX, spawnY));
 
         enemyActive[i] = true;
         enemyTouchingPlayer1[i] = false;
         enemyTouchingPlayer2[i] = false;
     }
 }
+
 
 void initializeGun(float speed)
 {

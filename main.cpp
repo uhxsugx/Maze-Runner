@@ -15,14 +15,32 @@ using namespace std;
 using namespace sf;
 int main()
 {
+	selectRandomMaze();
+	srand(time(0));
+	bool break_flag = false;
+	int players = 1;
+	int health1 = 100;
+	int health2 = 100;
+	int bossHealth = 750;
+	bool isdead = false;
+	bool iswin = false;
+	bool ispaused = false;
+	bool qHeld = false;
+	int retry = 2;
+	int paused = 0;
+	int random = 0;
 	VideoMode res = VideoMode::getDesktopMode();
     RenderWindow Gamewin(res, "The Maze Runner", State:: Fullscreen);
 	int width = Gamewin.getSize().x;
 	int length = Gamewin.getSize().y;
 	initializePlayer();
 	initializePlayer2();
+	int player1X = 30;
+	int player1Y = 30;
+	int player2X = 60;
+	int player2Y = 30;
 	initializeBoss(width, length);
-	initializeEnemies(width, length);
+	initializeEnemies(width, length,players);
 	initializeGun(2.0);
 	
 	int level = 1;
@@ -49,24 +67,6 @@ int main()
 	if(!mummies_hurt_buffer.loadFromFile("data/sounds/mummiesDamage.wav"))
 	return -1;
 	Sound mummies_hurt_sound(mummies_hurt_buffer);
-	
-	bool break_flag = false;
-	int players = 1;
-	int health1 = 100;
-	int health2 = 100;
-	int player1X = 30;
-	int player1Y = 30;
-	int player2X = 60;
-	int player2Y = 30;
-	int bossHealth = 750;
-	bool isdead = false;
-	bool iswin = false;
-	bool ispaused = false;
-	bool qHeld = false;
-	int retry = 2;
-	int paused = 0;
-	int random = 0;
-	srand(time(0));
 	while (Gamewin.isOpen())
 	{
 	gameLoop:
@@ -146,7 +146,7 @@ int main()
 			initializePlayer();
 			initializePlayer2();
 			initializeBoss(width, length);
-			initializeEnemies(width, length);
+			initializeEnemies(width, length,players);
 			initializeGun(2.0f);
 			level = 1;
 			backgroundMusic(music, level);
@@ -262,7 +262,7 @@ int main()
 					initializePlayer();
 					initializePlayer2();
 					initializeBoss(width, length);
-					initializeEnemies(width, length);
+					initializeEnemies(width, length,players);
 					initializeGun(2.0f);
 					player1X = 30;
 					player1Y = 30;
