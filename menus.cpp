@@ -21,27 +21,32 @@ void showMainMenu(RenderWindow &window, int &mode)
         cout << "Path data/fonts/ARIAL.ttf menus.cpp" << endl;
         return;
     }
+    Text story(font,"For centuries, an ancient pyramid has guarded its secrets.\n"
+    "An explorer, trapped inside its cursed chambers,\n"
+    "has finally found a way out. But freedom comes at a price.\n"
+    "Deadly traps, mummies and ancient guardians stand in his way.\n\n"
+    "WILL HE ESCAPE ALIVE?",22);
 
     Text title(font, "The Maze Runner", 25);
     title.setFillColor(Color::Yellow);
 
-    title.setPosition(Vector2f(250, 150));
+    title.setPosition({250.f,80.f});
     window.draw(title);
+    story.setFillColor(Color::White);
+    story.setPosition({100.f,170.f});
+    window.draw(story);
+    Text players(font, "Mode: Solo", 20);
+    if(mode == 2)
+    players.setString("Mode: Co-op");
+    players.setPosition({250.f,390.f});
+    window.draw(players);
+
 
     if(Keyboard::isKeyPressed(Key::Num1) || Keyboard::isKeyPressed(Key::Numpad1))
     mode = 1;
 
     if(Keyboard::isKeyPressed(Key::Num2) || Keyboard::isKeyPressed(Key::Numpad2))
     mode = 2;
-
-
-    Text players(font, "Mode: Solo", 20);
-    if(mode == 2)
-    players.setString("Mode: Co-op");
-    players.setPosition(Vector2f(250, 250));
-    window.draw(players);
-
-
     Text controls(font, "Controls: \nP1: WASD\t P2: Arrows\t Exit: Esc\t Pause: P\t Restart: R\nSolo: Num1\t Co-op: Num2", 20);
     controls.setPosition({250.f, 450.f});
     window.draw(controls);
