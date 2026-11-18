@@ -1,4 +1,6 @@
 // g++ main.cpp player.cpp player2.cpp enemies.cpp map.cpp sounds.cpp menus.cpp -std=c++17 -O2 -o MazeRunner.exe -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+#include<cstdlib>
+#include<ctime>
 #include<iostream>
 #include "player.h"
 #include "sounds.h"
@@ -64,6 +66,7 @@ int main()
 	int retry = 2;
 	int paused = 0;
 	int random = 0;
+	srand(time(0));
 	while (Gamewin.isOpen())
 	{
 	gameLoop:
@@ -97,7 +100,11 @@ int main()
 					break_flag = true;
 				}
 				if(keyPressed-> code == Keyboard::Key::Enter)
-					break_flag = true;
+					{
+						selectRandomMaze();
+						break_flag = true;
+
+					}
 				
 				
 
@@ -135,6 +142,7 @@ int main()
 
 		if(retry == 1)
 		{	
+			selectRandomMaze();
 			initializePlayer();
 			initializePlayer2();
 			initializeBoss(width, length);
