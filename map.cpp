@@ -90,7 +90,7 @@ string map3[100] = {
     "#          #       #       # #     #         #",
     "########## ####### ####### # ##### ######### #",
     "#        #       #       # #     #           #",
-    "# ###### ####### ####### # ##### #############",
+    "# ###### ####### ####### # ##### ############ ",
     "#                  #     #                    #",
     "############################# #################"
 };
@@ -118,7 +118,7 @@ string map4[100] = {
     "#         # #     # #     #                 # #",
     "######### # ##### # ##### ################### #",
     "#       # #     # #     #                     #",
-    "# ##### # ##### # ##### ##################### #",
+    "# ##### # ##### # ##### ####################  #",
     "#                   #                          #",
     "############################# #################"
 };
@@ -147,35 +147,45 @@ void selectRandomMaze()
         selectedMap = map4;
     }
 }
-int make_maze(RenderWindow &window)
+
+int make_maze(RenderWindow& window)
 {
     bossRoomActive = false;
+    static Texture brickTexture;
+    static bool textureLoaded =
+        brickTexture.loadFromFile("data/images/game_brick.jpg");
+
+    if (!textureLoaded)
+    {
+        cout << "Failed to load game_brick.jpg!" << endl;
+        return -1;
+    }
+
     int width = window.getSize().x;
-    int blocksX = width/30;
+    int blocksX = width / 30;
 
     int length = window.getSize().y;
-    int blocksY = length/30;
-    for(int i = 0; i <= blocksX; i++)
+    int blocksY = length / 30;
+
+    for (int i = 0; i <= blocksX; i++)
     {
-        for(int j = 0; j <= blocksY; j++)
+        for (int j = 0; j <= blocksY; j++)
         {
-            block[i][j].setSize(Vector2f(30, 30));
-            block[i][j].setFillColor(Color::Yellow);
-            block[i][j].setPosition(Vector2f(i*30, j*30));
-            block[i][j].setOutlineColor(Color(80, 80, 80));
-            block[i][j].setOutlineThickness(3.f);
-            if(j<25 && i < selectedMap[j].size()&&selectedMap[j][i] == '#')
+            block[i][j].setSize(Vector2f(30.f, 30.f));
+            block[i][j].setTexture(&brickTexture);
+            block[i][j].setFillColor(Color::White);
+            block[i][j].setPosition(Vector2f(i * 30.f, j * 30.f));
+            if (j < 25 &&
+                i < selectedMap[j].size() &&
+                selectedMap[j][i] == '#')
             {
                 window.draw(block[i][j]);
             }
         }
     }
 
-    // cout << block[blocksX-1][blocksY-1].getPosition().x << " " << block[blocksX-1][blocksY-1].getPosition().y << endl;
+    return 0;}
 
-
-    return 0;
-}
 
 bool mazeCollision(float x, float y, float width, float height)
 {
