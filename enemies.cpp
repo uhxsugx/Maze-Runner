@@ -24,12 +24,12 @@ float bossX, bossY;
 float bossSpeed;
 float enemySpeed;
 float boss_size = 35.0;
-const int enemyCount = 10;
+int enemyCount = 10;
 const float enemy_size = 15.0;
-CircleShape enemy[enemyCount];
-bool enemyActive[enemyCount];
-bool enemyTouchingPlayer1[enemyCount];
-bool enemyTouchingPlayer2[enemyCount];
+CircleShape enemy[10];
+bool enemyActive[10];
+bool enemyTouchingPlayer1[10];
+bool enemyTouchingPlayer2[10];
 bool bossTouchingPlayer1 = false;
 bool bossTouchingPlayer2 = false;
 float gunX, gunY;
@@ -443,8 +443,19 @@ void moveGun(RenderWindow &window, Sound &bossHurtEffect, Sound &mummiesHurtEffe
     }
 }
 
-void drawEnemies(RenderWindow &window)
+void drawEnemies(RenderWindow &window, int level)
 {
+    if(level == 1)
+	enemyCount = 2;
+    else if(level == 2)
+	enemyCount = 4;
+    else if(level == 3)
+	enemyCount = 6;
+    else if(level == 4)
+	enemyCount = 10;
+    else
+	enemyCount = 0;
+
     for(int i = 0; i < enemyCount; i++)
     {
         if(enemyActive[i])

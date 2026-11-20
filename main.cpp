@@ -207,7 +207,7 @@ int main()
 			else
 				make_maze(Gamewin);
 			
-			drawEnemies(Gamewin);
+			drawEnemies(Gamewin, level);
 			DrawHealthBar(Gamewin);
 			drawPlayer(Gamewin);
 			if(!ispaused)

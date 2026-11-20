@@ -10,7 +10,7 @@ int bossDamage(int damage);
 int getBossHealth();
 int moveBoss(sf::RenderWindow &window, int player1X, int player1Y, int player2X, int player2Y, int mode);
 void initializeEnemies(int width, int length, int mode);
-void drawEnemies(sf::RenderWindow &window);
+void drawEnemies(sf::RenderWindow &window, int level);
 int moveEnemies(int player1X, int player1Y, int player2X, int player2Y, int mode);
 void initializeGun(float speed);
 void shootGun(int playerX, int playerY);
