@@ -25,7 +25,7 @@ string map[100] = {
     "# ######### ####### ##### # ######### # # #  #",
     "#         #       # #     #     #     #   #  #",
     "######### ####### # # ######### # #########  #",
-    "#       #       # # #     #     #           #",
+    "#       #       # # #     #     #            #",
     "# ##### ####### # # ##### # ##################",
     "# #   #       # #       # #       #          #",
     "# # ######### # ####### # ####### # ######## #",
@@ -247,9 +247,6 @@ void makebossroom(RenderWindow &window)
             block[i][j].setSize(Vector2f(30, 30));
             block[i][j].setFillColor(Color::Yellow);
             block[i][j].setPosition(Vector2f(i*30, j*30));
-            block[i][j].setOutlineColor(Color(80, 80, 80));
-            block[i][j].setOutlineThickness(3.f);
-
             if (i == 0 || i == blocksX || j == 0 || j == blocksY)
             window.draw(block[i][j]);
 

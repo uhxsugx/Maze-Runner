@@ -31,6 +31,13 @@ int main()
 	int random = 0;
 	VideoMode res = VideoMode::getDesktopMode();
     RenderWindow Gamewin(res, "The Maze Runner", State:: Fullscreen);
+	auto icon = sf::Image{};
+	if(!icon.loadFromFile("data/images/icon.jpeg"))
+	{
+	    return -1;
+		cout << "No" << endl;
+	}
+	Gamewin.setIcon(icon);
 	int width = Gamewin.getSize().x;
 	int length = Gamewin.getSize().y;
 	initializePlayer();
@@ -101,6 +108,7 @@ int main()
 				}
 				if(keyPressed-> code == Keyboard::Key::Enter)
 					{
+						if(break_flag == false)
 						selectRandomMaze();
 						break_flag = true;
 
@@ -174,6 +182,7 @@ int main()
 		Gamewin.clear();
 		if(!break_flag && isdead == false && iswin == false)
 			showMainMenu(Gamewin, players);
+				
 
 		else if(ispaused && break_flag && !isdead && iswin == false)
 		{	
@@ -272,6 +281,7 @@ int main()
 					health2 = 100;
 					bossHealth = getBossHealth();
 					backgroundMusic(music, level);
+					selectRandomMaze();
 					goto gameLoop;
 				}
 			}
