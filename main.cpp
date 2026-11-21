@@ -26,7 +26,9 @@ int main()
 	bool iswin = false;
 	bool ispaused = false;
 	bool qHeld = false;
+	bool isCredit = false;
 	int retry = 2;
+	int credits = 0;
 	int paused = 0;
 	int random = 0;
 	VideoMode res = VideoMode::getDesktopMode();
@@ -92,7 +94,7 @@ int main()
 				if(keyPressed->code == Keyboard::Key::J)
 				{
 					bossHealth = bossDamage(100);
-					//bosshurtSound(boss_hurt_sound);
+					bosshurtSound(boss_hurt_sound);
 				}
 				if(keyPressed->code == Keyboard::Key::Q)
 				{
@@ -128,6 +130,8 @@ int main()
 		
 				if(keyPressed -> code == Keyboard::Key::P)
 				paused++;
+				if(keyPressed -> code == Keyboard::Key::C && break_flag)
+				credits++;
 				
 			}
 			if(const auto* keyReleased = event->getIf<Event::KeyReleased>())
@@ -148,8 +152,16 @@ int main()
 		else 
 		ispaused = true;
 
+
+		if(credits %2 == 0)
+		isCredit = false;
+
+		else
+		isCredit = true;
+
 		if(retry == 1)
 		{	
+			
 			selectRandomMaze();
 			initializePlayer();
 			initializePlayer2();
@@ -173,21 +185,22 @@ int main()
 			//if you want to start at main menu then make break_flag = false;
 			// this is because the ainmenu nly opens if break_flag = false;
 			// if it is true then the game will automatically start
-			//break_flag = false;
+			break_flag = false;
 			continue;
 		}
 		else if(retry == 0)
 		break;
 
 		Gamewin.clear();
+		
 		if(!break_flag && isdead == false && iswin == false)
-			showMainMenu(Gamewin, players);
+		    {showMainMenu(Gamewin, players);}
 				
-
 		else if(ispaused && break_flag && !isdead && iswin == false)
 		{	
 			pauseMenu(Gamewin);
 		}
+		
 		else if (break_flag && isdead == false && iswin == false)
 		{
 			if(level == 5)
@@ -214,7 +227,7 @@ int main()
 				}
 			}
 			else
-				make_maze(Gamewin);
+				make_maze(Gamewin, level);
 			
 			drawEnemies(Gamewin, level);
 			DrawHealthBar(Gamewin);
@@ -264,8 +277,10 @@ int main()
 			if(completedMaze)
 			{
 				level++;
+				//loadingScreen(Gamewin);
 				if(level > 5)
 					iswin = true;
+					
 				else
 				{
 					initializePlayer();

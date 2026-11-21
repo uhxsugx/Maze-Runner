@@ -148,13 +148,24 @@ void selectRandomMaze()
     }
 }
 
-int make_maze(RenderWindow& window)
+int make_maze(RenderWindow& window, int level)
 {
     bossRoomActive = false;
     static Texture brickTexture;
-    static bool textureLoaded =
-        brickTexture.loadFromFile("data/images/game_brick.jpg");
-
+    static bool textureLoaded;
+    if(level == 1)
+	textureLoaded = brickTexture.loadFromFile("data/images/wall1.png");
+    if(level == 2)
+	textureLoaded = brickTexture.loadFromFile("data/images/wall2.png");
+    if(level == 3)
+	textureLoaded = brickTexture.loadFromFile("data/images/wall3.png");
+    if(level == 4)
+	textureLoaded = brickTexture.loadFromFile("data/images/wall4.png");
+    if(level == 5)
+    {
+	bossRoomActive = true;
+        textureLoaded = brickTexture.loadFromFile("");
+    }
     if (!textureLoaded)
     {
         cout << "Failed to load game_brick.jpg!" << endl;
@@ -232,6 +243,14 @@ bool mazeCompleted(float x, float y, float width, float height)
 
 void makebossroom(RenderWindow &window)
 {
+    static Texture brickTexture;
+    static bool textureLoaded;
+
+    textureLoaded = brickTexture.loadFromFile("data/images/testtile.png");
+    
+
+    if(!textureLoaded) return;
+   
     int width = window.getSize().x;
     int blocksX = width/30;
 
@@ -247,6 +266,7 @@ void makebossroom(RenderWindow &window)
             block[i][j].setSize(Vector2f(30, 30));
             block[i][j].setFillColor(Color::Yellow);
             block[i][j].setPosition(Vector2f(i*30, j*30));
+	    block[i][j].setTexture(&brickTexture);
             if (i == 0 || i == blocksX || j == 0 || j == blocksY)
             window.draw(block[i][j]);
 

@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 
 using namespace std;
@@ -37,7 +38,7 @@ void showMainMenu(RenderWindow &window, int &mode)
 
 void loadingScreen(RenderWindow &window)
 {
-    sleep(seconds(5));
+    Clock loadTime;
     Font font;
     if(!font.openFromFile("data/fonts/Minecraft.ttf"))
     {
@@ -46,7 +47,9 @@ void loadingScreen(RenderWindow &window)
 
     Text text(font, "Loading....", 50);
     text.setFillColor(Color::White);
-    text.setPosition({250, 150});
+    text.setPosition(Vector2f(250.f, 150.f));
+
+    while(loadTime.getElapsedTime() < seconds(5))
     window.draw(text);
 
 
@@ -55,7 +58,7 @@ void loadingScreen(RenderWindow &window)
 void showGameOverScreen(RenderWindow &window)
 {
     Texture backgroundTexture;
-    if(!backgroundTexture.loadFromFile("data/images/Ancient Egyptian Temple Maze.png"))
+    if(!backgroundTexture.loadFromFile("data/images/Mummified.png"))
     {
         cout << "Image not found !" << endl;
         return;
@@ -63,37 +66,11 @@ void showGameOverScreen(RenderWindow &window)
     Sprite background(backgroundTexture);
     background.setScale({(float)window.getSize().x/backgroundTexture.getSize().x, (float)window.getSize().y/backgroundTexture.getSize().y});
     window.draw(background);
-    Font font;
-    if(!font.openFromFile("data/fonts/Minecraft.ttf"))
-    {
-        cout << "Font dont open. menus.cpp" << endl;
-        return;
-    }
-
-    Text text(font, "GAME OVER", 50);
-    text.setFillColor(Color::Yellow);
-    text.setPosition(Vector2f(250, 150));
-    window.draw(text);
-
-    Text retry_info(font, "Press R to retry and Enter to exit", 25);
-    retry_info.setFillColor(Color::White);
-    retry_info.setPosition({250.f, 250.f});
-    window.draw(retry_info);
-
     return;
 }
 
 void pauseMenu(RenderWindow &window)
 {
-    Texture backgroundTexture;
-    if(!backgroundTexture.loadFromFile("data/images/Ancient Egyptian Temple Maze.png"))
-    {
-        cout << "Image not found !" << endl;
-        return;
-    }
-    Sprite background(backgroundTexture);
-    background.setScale({(float)window.getSize().x/backgroundTexture.getSize().x, (float)window.getSize().y/backgroundTexture.getSize().y});
-    window.draw(background);
     Font font;
     if(!font.openFromFile("data/fonts/Minecraft.ttf"))
     {
@@ -147,6 +124,24 @@ void winScreen(RenderWindow &window)
     retry_info.setFillColor(Color::White);
     retry_info.setPosition({250.f, 250.f});
     window.draw(retry_info);
-
     return;
+}
+
+void Credits(RenderWindow &window)
+{
+    Font font;
+    if(!font.openFromFile("data/fonts/Minecraft.ttf"))
+    {
+	cout << "No font found";
+	return;
+    }
+
+    Text heading(font);
+    Text credits(font);
+
+    heading.setString("Credits");
+    heading.setPosition(Vector2f(250, 250));
+    heading.setFillColor(Color::Yellow);
+
+    window.draw(heading);
 }

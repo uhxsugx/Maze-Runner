@@ -72,9 +72,18 @@ void initializeBoss(int width, int length)
 
 void drawBoss(RenderWindow &window)
 {
+    static Texture brickTexture;
+    static bool textureLoaded;
+
+    textureLoaded = brickTexture.loadFromFile("data/images/boss normal.png");
+
+    if(!textureLoaded)
+	return;
+
     CircleShape boss(boss_size);
-    boss.setFillColor(Color(104, 0, 152));
+    //boss.setFillColor(Color(104, 0, 152));
     boss.setPosition(Vector2f(bossX, bossY));
+    boss.setTexture(&brickTexture);
     window.draw(boss);
 }
 
@@ -183,12 +192,20 @@ double distance(float x1, float x2, float y1, float y2)
 void initializeEnemies(int width, int length, int mode)
 {
     enemySpeed = 0.75;
+    static Texture brickTexture;
+    static bool textureLoaded;
+
+    textureLoaded = brickTexture.loadFromFile("data/images/mummies.png");
+    
+
+    if(!textureLoaded) return;
 
     for(int i = 0; i < enemyCount; i++)
     {
         enemy[i].setRadius(enemy_size);
-        enemy[i].setFillColor(Color::Red);
+        //enemy[i].setFillColor(Color::Red);
         enemy[i].setOrigin(Vector2f(enemy_size, enemy_size));
+	enemy[i].setTexture(&brickTexture);
         int r, c;
         float spawnX, spawnY;
         bool validPosition = false;
@@ -298,6 +315,7 @@ void shootGun(int playerX, int playerY)
             gunActive = true;
         }
     }
+    return;
 }
 
 void moveGun(RenderWindow &window, Sound &bossHurtEffect, Sound &mummiesHurtEffect,
